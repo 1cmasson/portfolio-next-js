@@ -1,26 +1,298 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
+/* Cosmic Terminal Theme */
 @theme inline {
+  /* Core cosmic colors */
+  --color-space: #020617;
+  --color-neon-green: #7cfc00;
+  --color-neon-amber: #facc15;
+  --color-neon-magenta: #f472b6;
+  --color-neon-blue: #38bdf8;
+  --color-terminal-surface: rgba(15, 23, 42, 0.75);
+  --color-terminal-border: rgba(124, 252, 0, 0.4);
+  
+  /* ShadCN theme mappings */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-mono: var(--font-terminal);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.625rem;
+  --font-terminal: 'Fira Code', 'Courier New', monospace;
+  
+  /* Cosmic dark theme (default) */
+  --background: #020617;
+  --foreground: #7cfc00;
+  --card: rgba(15, 23, 42, 0.75);
+  --card-foreground: #7cfc00;
+  --popover: rgba(15, 23, 42, 0.95);
+  --popover-foreground: #7cfc00;
+  --primary: #7cfc00;
+  --primary-foreground: #020617;
+  --secondary: rgba(124, 252, 0, 0.1);
+  --secondary-foreground: #7cfc00;
+  --muted: rgba(148, 163, 184, 0.1);
+  --muted-foreground: rgba(226, 232, 240, 0.8);
+  --accent: #facc15;
+  --accent-foreground: #020617;
+  --destructive: #ef4444;
+  --border: rgba(124, 252, 0, 0.4);
+  --input: rgba(124, 252, 0, 0.2);
+  --ring: rgba(124, 252, 0, 0.75);
+  
+  /* Focus outline */
+  --focus-outline: 0 0 0 3px rgba(124, 252, 0, 0.75);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    background: 
+      radial-gradient(circle at top, rgba(124, 252, 0, 0.1), transparent 55%),
+      radial-gradient(circle at bottom, rgba(148, 163, 184, 0.06), transparent 60%),
+      #020617;
+    color: #7cfc00;
+    font-family: var(--font-terminal);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Neon text glow effects */
+.text-glow-green {
+  text-shadow: 0 0 8px rgba(124, 252, 0, 0.6);
+}
+
+.text-glow-amber {
+  text-shadow: 0 0 8px rgba(250, 204, 21, 0.4);
+}
+
+.text-glow-magenta {
+  text-shadow: 0 0 10px rgba(244, 114, 182, 0.45);
+}
+
+/* Headline glow effect */
+.headline-glow {
+  text-shadow: 
+    0 0 20px rgba(124, 252, 0, 0.3),
+    0 0 40px rgba(124, 252, 0, 0.1);
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: #0f172a;
+  color: #7cfc00;
+  border: 2px solid #7cfc00;
+  z-index: 999;
+  border-radius: 0.5rem;
+}
+
+.skip-link:focus {
+  left: 1rem;
+}
+
+/* Focus visible styles */
+.focus-visible:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-outline);
+  border-radius: 0.25rem;
+}
+
+/* Console block (terminal container) */
+.console-block {
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(124, 252, 0, 0.3);
+  backdrop-filter: blur(12px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 0 30px rgba(124, 252, 0, 0.05);
+}
+
+.console-block header {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.35em;
+  color: #facc15;
+  margin-bottom: 1rem;
+}
+
+/* Planet card (project cards) */
+.planet-card {
+  position: relative;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid rgba(124, 252, 0, 0.4);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  padding: 1.75rem;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  box-shadow: 0 0 20px rgba(124, 252, 0, 0.1);
+}
+
+.planet-card:hover,
+.planet-card:focus-within {
+  transform: translateY(-6px) scale(1.02);
+  border-color: rgba(250, 204, 21, 0.6);
+  box-shadow: 0 0 25px rgba(250, 204, 21, 0.25);
+}
+
+.planet-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  background: linear-gradient(135deg, rgba(124, 252, 0, 0.2), rgba(59, 130, 246, 0.15));
+  pointer-events: none;
+}
+
+.planet-card:hover::after,
+.planet-card:focus-within::after {
+  opacity: 1;
+}
+
+/* Timeline entry marker */
+.timeline-entry {
+  position: relative;
+  padding-left: 1.25rem;
+}
+
+.timeline-entry::before {
+  content: '>';
+  position: absolute;
+  left: 0;
+  color: #facc15;
+}
+
+/* Starfield canvas positioning */
+.starfield-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Nyan Cat container */
+.nyan-container {
+  position: fixed;
+  top: 20%;
+  left: -200px;
+  width: 180px;
+  height: 100px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.nyan-container img {
+  width: 100%;
+  height: auto;
+}
+
+/* Star Wars crawl animation */
+@keyframes crawl {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-200%);
+  }
+}
+
+.crawl-text {
+  perspective: 400px;
+  overflow: hidden;
+  height: 200px;
+}
+
+.crawl-inner {
+  animation: crawl 60s linear infinite;
+  transform-origin: center top;
+}
+
+[data-motion="reduced"] .crawl-inner {
+  animation: none;
+}
+
+/* Button terminal variant */
+.button-terminal {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(124, 252, 0, 0.6);
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  transition: background-color 150ms ease, transform 150ms ease;
+}
+
+.button-terminal:hover {
+  background-color: rgba(124, 252, 0, 0.1);
+}
+
+.button-terminal:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-outline);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
+  }
 }
