@@ -10,8 +10,7 @@ const navItems: NavItem[] = [
   { label: "home", href: "/" },
   { label: "about", href: "/about" },
   { label: "projects", href: "/projects" },
-  { label: "blog", href: "/blog" },
-  { label: "contact", href: "/contact" },
+  // { label: "blog", href: "/blog" },
 ];
 
 export function Header() {
@@ -24,7 +23,7 @@ export function Header() {
           href="/"
           className="text-sm uppercase tracking-[0.35em] text-[#facc15] hover:text-amber-400 transition focus-visible"
         >
-          nyan@space:~$
+          1cmasson@space:~$
         </Link>
 
         <ul className="flex items-center gap-6 text-sm md:text-base">
@@ -34,17 +33,13 @@ export function Header() {
                 ? pathname === "/" 
                 : pathname.startsWith(item.href);
             
-            const isContact = item.label === "contact";
-
             return (
               <li key={item.href}>
                 <Link
                   href={item.href}
                   className={cn(
                     "transition focus-visible",
-                    isContact 
-                      ? "hover:text-[#f472b6]" 
-                      : "hover:text-amber-400",
+                    "hover:text-amber-400",
                     isActive && "text-[#facc15] text-glow-amber"
                   )}
                   aria-current={isActive ? "page" : undefined}
