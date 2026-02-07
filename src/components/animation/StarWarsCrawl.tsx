@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useMotionPreference } from "@/hooks";
+import { useMotionContext } from "./MotionProvider";
 
 interface StarWarsCrawlProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface StarWarsCrawlProps {
 }
 
 export function StarWarsCrawl({ children, className }: StarWarsCrawlProps) {
-  const { isReduced } = useMotionPreference();
+  const { isReduced } = useMotionContext();
   const [isPaused, setIsPaused] = useState(false);
 
   const togglePause = () => {

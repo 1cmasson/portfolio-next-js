@@ -3,19 +3,16 @@
 import { useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, useAnimationControls } from "framer-motion";
-import { useMotionPreference } from "@/hooks";
+import { useMotionContext } from "./MotionProvider";
 
 export function NyanCatFlyby() {
-  const { isReduced } = useMotionPreference();
+  const { isReduced } = useMotionContext();
   const controls = useAnimationControls();
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const animate = async () => {
-      if (isReduced) {
-        controls.set({ x: -200, opacity: 0 });
-        return;
-      }
+      if (isReduced) return;
 
       await controls.start({
         x: ["calc(-200px)", "20vw", "110vw"],
@@ -32,6 +29,9 @@ export function NyanCatFlyby() {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
+
+      if (isReduced) return;
+
       animate();
       intervalRef.current = setInterval(animate, 20000);
     };
@@ -52,6 +52,7 @@ export function NyanCatFlyby() {
       className="nyan-container"
       role="img"
       aria-label="Nyan Cat streaks across the galaxy trailing pixelated rainbows."
+      style={{ display: isReduced ? "none" : undefined }}
     >
       <Image
         src="/assets/nyan/nyan-cat.gif"

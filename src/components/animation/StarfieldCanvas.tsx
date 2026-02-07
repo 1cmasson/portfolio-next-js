@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { useMotionPreference } from "@/hooks";
+import { useMotionContext } from "./MotionProvider";
 
 interface Star {
   x: number;
@@ -11,7 +11,7 @@ interface Star {
 
 export function StarfieldCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { isReduced } = useMotionPreference();
+  const { isReduced } = useMotionContext();
   const starsRef = useRef<Star[]>([]);
   const rafRef = useRef<number>(0);
 

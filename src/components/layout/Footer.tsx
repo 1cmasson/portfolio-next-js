@@ -1,23 +1,26 @@
 import Link from "next/link";
+import { Mail } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Container } from "./Container";
 
-const footerNavLinks = [
-  { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
-  { label: "Projects", href: "/projects" },
-  // { label: "Blog", href: "/blog" },
-];
+// const footerNavLinks = [
+//   { label: "Home", href: "/" },
+//   { label: "Projects", href: "/projects" },
+//   // { label: "Blog", href: "/blog" },
+// ];
 
 const socialLinks = [
   { 
     label: "GitHub", 
     href: "https://github.com/1cmasson",
-    external: true
+    external: true,
+    icon: FaGithub,
   },
   { 
     label: "LinkedIn", 
-    href: "https://www.linkedin.com/in/carlosmasson",
-    external: true
+    href: "https://www.linkedin.com/in/carlos-masson-29130a14a/",
+    external: true,
+    icon: FaLinkedin,
   },
 ];
 
@@ -29,13 +32,14 @@ export function Footer() {
           <p className="uppercase tracking-[0.3em] text-sm text-[#facc15]">
             open transmission
           </p>
-          <p className="text-slate-200/80">
+          <p className="text-slate-200/80 inline-flex items-center gap-1.5">
+            <Mail className="size-4" aria-hidden="true" />
             Email:{" "}
             <a
-              href="mailto:carlos@space.dev"
+              href="mailto:carlosmasson96@gmail.com"
               className="underline focus-visible hover:text-[#facc15] transition"
             >
-              carlos@space.dev
+              carlosmasson96@gmail.com
             </a>
           </p>
           <p className="text-slate-200/60 text-sm mt-2">
@@ -50,13 +54,14 @@ export function Footer() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="hover:text-amber-400 transition focus-visible"
+              className="inline-flex items-center gap-1.5 hover:text-amber-400 transition focus-visible"
             >
+              <link.icon className="size-4" aria-hidden="true" />
               {link.label}
             </a>
           ))}
           
-          {footerNavLinks.map((link) => (
+          {/* {footerNavLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -64,7 +69,7 @@ export function Footer() {
             >
               {link.label}
             </Link>
-          ))}
+          ))} */}
         </div>
       </Container>
     </footer>

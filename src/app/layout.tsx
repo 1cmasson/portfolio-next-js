@@ -3,7 +3,7 @@ import { Fira_Code } from "next/font/google";
 import "./globals.css";
 
 import { SkipLink, Header, Footer } from "@/components/layout";
-import { StarfieldCanvas, NyanCatFlyby } from "@/components/animation";
+import { StarfieldCanvas, NyanCatFlyby, MotionProvider } from "@/components/animation";
 
 const firaCode = Fira_Code({
   variable: "--font-terminal",
@@ -57,12 +57,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={firaCode.variable}>
       <body className="min-h-screen overflow-x-hidden antialiased">
-        <SkipLink />
-        <StarfieldCanvas />
-        <NyanCatFlyby />
-        <Header />
-        {children}
-        <Footer />
+        <MotionProvider>
+          <SkipLink />
+          <StarfieldCanvas />
+          <NyanCatFlyby />
+          <Header />
+          {children}
+          <Footer />
+        </MotionProvider>
       </body>
     </html>
   );

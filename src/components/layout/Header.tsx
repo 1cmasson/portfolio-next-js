@@ -1,21 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { cn } from "@/lib/utils";
+import { MotionToggle } from "@/components/animation";
 import { Container } from "./Container";
-import type { NavItem } from "@/types";
 
-const navItems: NavItem[] = [
-  { label: "home", href: "/" },
-  { label: "about", href: "/about" },
-  { label: "projects", href: "/projects" },
-  // { label: "blog", href: "/blog" },
-];
+// const navItems: NavItem[] = [
+//   { label: "home", href: "/" },
+//   { label: "projects", href: "/projects" },
+//   // { label: "blog", href: "/blog" },
+// ];
 
 export function Header() {
-  const pathname = usePathname();
-
   return (
     <header className="relative z-10">
       <Container as="nav" className="py-6 flex items-center justify-between">
@@ -26,7 +21,7 @@ export function Header() {
           1cmasson@space:~$
         </Link>
 
-        <ul className="flex items-center gap-6 text-sm md:text-base">
+        {/* <ul className="flex items-center gap-6 text-sm md:text-base">
           {navItems.map((item) => {
             const isActive = 
               item.href === "/" 
@@ -49,7 +44,9 @@ export function Header() {
               </li>
             );
           })}
-        </ul>
+        </ul> */}
+
+        <MotionToggle />
       </Container>
     </header>
   );
