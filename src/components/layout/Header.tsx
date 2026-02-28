@@ -4,12 +4,6 @@ import Link from "next/link";
 import { MotionToggle } from "@/components/animation";
 import { Container } from "./Container";
 
-// const navItems: NavItem[] = [
-//   { label: "home", href: "/" },
-//   { label: "projects", href: "/projects" },
-//   // { label: "blog", href: "/blog" },
-// ];
-
 export function Header() {
   return (
     <header className="relative z-10">
@@ -21,32 +15,15 @@ export function Header() {
           1cmasson@space:~$
         </Link>
 
-        {/* <ul className="flex items-center gap-6 text-sm md:text-base">
-          {navItems.map((item) => {
-            const isActive = 
-              item.href === "/" 
-                ? pathname === "/" 
-                : pathname.startsWith(item.href);
-            
-            return (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={cn(
-                    "transition focus-visible",
-                    "hover:text-amber-400",
-                    isActive && "text-[#facc15] text-glow-amber"
-                  )}
-                  aria-current={isActive ? "page" : undefined}
-                >
-                  {item.label}
-                </Link>
-              </li>
-            );
-          })}
-        </ul> */}
-
-        <MotionToggle />
+        <div className="flex items-center gap-6">
+          <Link
+            href="/blog"
+            className="text-sm uppercase tracking-[0.25em] text-slate-200/80 hover:text-[#facc15] transition focus-visible"
+          >
+            blog
+          </Link>
+          <MotionToggle />
+        </div>
       </Container>
     </header>
   );

@@ -2,33 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container } from "@/components/layout";
 import { HeadlineGlow } from "@/components/terminal";
-import { client, blogPostsQuery } from "@/lib/sanity";
+import { getAllBlogPosts } from "@/lib/blog-data";
 import type { BlogPost } from "@/types";
 
 export const metadata: Metadata = {
   title: "Blog",
   description: "Explore Markdown-powered transmissions straight from the Nyan Cat Space terminal.",
 };
-
-// Fallback data when Sanity is empty
-const fallbackPosts: BlogPost[] = [
-  {
-    slug: "2025-03-08-markdown-orbit",
-    title: "Plotting the Markdown Orbit",
-    date: "2025-03-08",
-    summary: "How we swapped Sanity for local Markdown while keeping the cosmic terminal vibe intact.",
-    tags: ["markdown", "accessibility", "tooling"],
-  },
-];
-
-async function getBlogPosts(): Promise<BlogPost[]> {
-  try {
-    const posts = await client.fetch(blogPostsQuery);
-    return posts?.length > 0 ? posts : fallbackPosts;
-  } catch {
-    return fallbackPosts;
-  }
-}
 
 function formatDate(dateString: string): string {
   const date = new Date(dateString);
@@ -40,8 +20,8 @@ function formatDate(dateString: string): string {
   });
 }
 
-export default async function BlogPage() {
-  const blogPosts = await getBlogPosts();
+export default function BlogPage() {
+  const blogPosts: BlogPost[] = getAllBlogPosts();
   
   return (
     <main id="main-content" className="relative z-10 px-6 py-16 md:py-24">

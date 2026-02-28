@@ -1,47 +1,10 @@
 // import Link from "next/link";
 import { Container } from "@/components/layout";
-import { ConsoleBlock, PlanetCard, HeadlineGlow, TimelineEntry } from "@/components/terminal";
-import { client, projectsQuery } from "@/lib/sanity";
-import type { Project } from "@/types";
+import { ConsoleBlock, BlogCard, HeadlineGlow, TimelineEntry } from "@/components/terminal";
+import { getAllBlogPosts } from "@/lib/blog-data";
 
-// Fallback data when Sanity is empty
-const fallbackProjects: Project[] = [
-  {
-    slug: "terminal-nebula",
-    title: "Terminal Nebula",
-    emoji: "🪐",
-    summary: "Multiplayer coding playground built for hackathons, featuring real-time pair programming and cosmic themes.",
-    tech: ["React", "WebSocket", "TypeScript"],
-    links: { source: "https://github.com/1cmasson" },
-  },
-  {
-    slug: "rainbow-drive",
-    title: "Rainbow Drive",
-    emoji: "🌈",
-    summary: "Hardware art installation synchronizing LED matrices with synthesized chip tunes and catnip-scented sensors.",
-    tech: ["Arduino", "WebGL", "MIDI"],
-  },
-  {
-    slug: "galactic-docs-api",
-    title: "Galactic Docs API",
-    emoji: "🛰️",
-    summary: "Microservice knowledge base that renders Markdown to terminal dashboards for mission control teams.",
-    tech: ["Node.js", "Markdown", "REST"],
-    links: { source: "https://github.com/1cmasson" },
-  },
-];
-
-async function getProjects(): Promise<Project[]> {
-  try {
-    const projects = await client.fetch(projectsQuery);
-    return projects?.length > 0 ? projects : fallbackProjects;
-  } catch {
-    return fallbackProjects;
-  }
-}
-
-export default async function HomePage() {
-  const allProjects = await getProjects();
+export default function HomePage() {
+  const blogPosts = getAllBlogPosts();
   return (
     <main id="main-content" className="relative z-10">
       {/* Hero Section */}
@@ -221,31 +184,23 @@ export default async function HomePage() {
         </Container>
       </section>
 
-      {/* Projects Preview Section */}
+      {/* Blog Posts Section */}
       <section className="px-6 py-20 md:py-28">
         <Container className="space-y-10">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
             <div>
               <HeadlineGlow as="h2">
-                Projects in orbit
+                Captain&rsquo;s Logs
               </HeadlineGlow>
               <p className="text-slate-200/80 max-w-2xl">
-                Each planet is a project log with mission details. Hover or tab to feel the gravitational pulse.
+                Transmissions from the cosmic terminal. Deep dives into the projects, algorithms, and systems I&rsquo;ve built.
               </p>
             </div>
-            
-            {/* <Link
-              href="/projects"
-              className="self-start md:self-auto inline-flex items-center gap-2 border border-[rgba(244,114,182,0.5)] px-4 py-2 rounded-lg hover:bg-[rgba(244,114,182,0.1)] transition focus-visible"
-            >
-              view all
-              <span aria-hidden="true">☄</span>
-            </Link> */}
           </div>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allProjects.map((project) => (
-              <PlanetCard key={project.slug} project={project} />
+            {blogPosts.map((post) => (
+              <BlogCard key={post.slug} post={post} />
             ))}
           </div>
         </Container>
