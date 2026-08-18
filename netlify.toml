@@ -30,3 +30,20 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
+
+# Static card assets. Listed before the vCard rule so the more specific
+# Cache-Control below wins for the vCard.
+[[headers]]
+  for = "/hi/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# iOS Safari only offers the native "Add to Contacts" sheet when the vCard
+# arrives as text/vcard. Without this it downloads as an opaque blob and the
+# Save-contact button on /hi looks broken.
+[[headers]]
+  for = "/hi/carlos-masson.vcf"
+  [headers.values]
+    Content-Type = "text/vcard; charset=utf-8"
+    Content-Disposition = "inline; filename=\"carlos-masson.vcf\""
+    Cache-Control = "public, max-age=3600"

@@ -15,23 +15,34 @@ A cosmic terminal-inspired portfolio built with Next.js 14+, ShadCN/UI, Tailwind
 
 ```
 src/
-├── app/                    # Next.js App Router pages
-│   ├── about/
-│   ├── blog/[slug]/
-│   ├── contact/
-│   ├── projects/[slug]/
-│   └── layout.tsx
+├── app/
+│   ├── (site)/             # Cosmic terminal portfolio — its own root layout
+│   │   ├── blog/[slug]/
+│   │   ├── projects/[slug]/
+│   │   ├── studio/
+│   │   └── layout.tsx      # starfield, Nyan Cat, header, footer, Fira Code
+│   ├── (card)/             # /hi contact card — a SECOND root layout
+│   │   ├── hi/page.tsx
+│   │   ├── layout.tsx
+│   │   └── card.css        # pop-art theme; does not import globals.css
+│   └── globals.css
 ├── components/
 │   ├── animation/          # Starfield, Nyan Cat, Motion toggle
+│   ├── card/               # ContactCard + useCardLocale
 │   ├── layout/             # Header, Footer, Container
 │   ├── terminal/           # ConsoleBlock, PlanetCard, etc.
 │   └── ui/                 # ShadCN components
 ├── hooks/                  # Custom React hooks
 ├── lib/
+│   ├── i18n/               # Card message catalogue
 │   ├── sanity/             # Sanity client, queries, schemas
 │   └── utils.ts
 └── types/                  # TypeScript definitions
 ```
+
+The two route groups each declare their own `<html>`/`<body>`, so `/hi` renders
+none of the site chrome. Adding a route means putting it in one group or the
+other — there is no `src/app/layout.tsx` any more.
 
 ## 🛠️ Getting Started
 
@@ -87,6 +98,48 @@ The project includes a `netlify.toml` configuration. To deploy:
 ```bash
 # Build command (already in netlify.toml)
 pnpm run build
+```
+
+## 📇 `/hi` — mobile contact card
+
+A single-screen, mobile-only card handed out via a QR code on 3D prints. Call,
+text, and save-contact buttons sit in a fixed thumb-zone bar. It shares nothing
+with the portfolio: its own root layout, its own stylesheet, no webfonts.
+
+**Assets** live in `public/hi/`: `carlos.webp` (320×320 avatar), `og.jpg`
+(1200×630 share image), `favicon.png`, `apple-touch-icon.png`, and
+`carlos-masson.vcf`.
+
+**The vCard is the fragile part.** iOS Safari only offers the native "Add to
+Contacts" sheet when the file arrives as `text/vcard`; `netlify.toml` sets that
+header. The link deliberately has no `download` attribute — on iOS that saves to
+Files instead of opening Contacts. The vCard is vCard 3.0 with an embedded
+photo, CRLF line endings, and base64 folded at 74 characters with a leading
+space on continuation lines (unfolded base64 imports blank on Android). Verify
+on a real iPhone; desktop browsers do not reproduce the behaviour.
+
+**Site URL.** `NEXT_PUBLIC_SITE_URL` sets `metadataBase`, which makes `og:image`
+and `og:url` absolute — iMessage, WhatsApp and Facebook will not render a
+relative `og:image`, and this card gets forwarded. It falls back to Netlify's
+build-time `URL`, then to a hardcoded default. The vCard's own `URL:` line is a
+static file and must be edited by hand if the domain changes.
+
+**i18n** (`src/lib/i18n/card-messages.ts`) is hand-rolled and key-based rather
+than i18next — a ~40 KB runtime on the page that sells "highly performant
+websites" would undercut the pitch. `MessageKey` is derived from the English
+catalogue, so a missing or misspelled Spanish key is a compile error. The server
+always renders English, so no-JS visitors and crawlers get a complete page;
+`useCardLocale` swaps in `?lang=` → `localStorage` → `navigator.languages` after
+hydration via `useSyncExternalStore`.
+
+**Regenerating the avatar** from the source art:
+
+```bash
+SRC=~/Documents/dev-projects/flamingo-city/mascots/tiles/carlos-bust.png
+magick "$SRC" -trim +repage /tmp/trim.png
+magick /tmp/trim.png -crop 700x700+68+20 +repage \
+  -background "#12E8F0" -alpha remove -alpha off -resize 320x320 -strip /tmp/carlos.png
+cwebp -q 82 /tmp/carlos.png -o public/hi/carlos.webp
 ```
 
 ## ♿ Accessibility Features

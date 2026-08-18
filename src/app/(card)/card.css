@@ -1,0 +1,416 @@
+/* Pop-art contact card theme.
+   Deliberately does NOT import globals.css — the (card) route group has its own
+   root layout so /hi escapes the cosmic-terminal chrome entirely. */
+@import "tailwindcss";
+
+:root {
+  --cyan: #12e8f0;
+  --cyan-deep: #05bfc9;
+  --magenta: #ff2d8a;
+  --yellow: #ffd93d;
+  --ink: #0b0b0f;
+  --paper: #fffdf6;
+  --shadow: 4px 4px 0 var(--ink);
+  --shadow-lg: 6px 6px 0 var(--ink);
+  --bar-h: 84px;
+  /* No webfont: ui-rounded resolves to SF Rounded on iOS — playful, zero bytes,
+     and it backs up the "highly performant websites" claim on the page. */
+  --font-card: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont,
+    "Segoe UI Variable Display", "Segoe UI", Roboto, system-ui, sans-serif;
+}
+
+.card-body {
+  margin: 0;
+  font-family: var(--font-card);
+  color: var(--ink);
+  background-color: var(--cyan);
+  /* Halftone dot field — pure CSS, no image request. */
+  background-image: radial-gradient(rgba(11, 11, 15, 0.16) 1.4px, transparent 1.5px);
+  background-size: 13px 13px;
+  line-height: 1.45;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------- layout ---------- */
+.card-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  /* Fallback clearance for the fixed action bar; the ContactCard component
+     replaces this with the bar's measured height, which changes with the
+     language (the Spanish "Guardar contacto" wraps to two lines). */
+  padding: 0 18px calc(var(--bar-h) + 28px + env(safe-area-inset-bottom));
+}
+
+.pop-card {
+  background: var(--paper);
+  border: 3px solid var(--ink);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 20px 18px;
+  margin: 0 0 18px;
+}
+
+.pop-card h2 {
+  margin: 0 0 12px;
+  font-size: 1rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 800;
+}
+
+/* ---------- top bar ---------- */
+.card-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 10px 18px;
+  background: var(--cyan); /* fallback for browsers without color-mix (iOS < 16.2) */
+  background: color-mix(in srgb, var(--cyan) 88%, transparent);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.card-mark {
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.16em;
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  padding: 3px 9px;
+  background: var(--ink);
+  color: var(--cyan);
+}
+
+.langswitch {
+  display: flex;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 3px 3px 0 var(--ink);
+}
+
+.langswitch button {
+  font: inherit;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  min-width: 52px;
+  min-height: 44px;
+  padding: 0 14px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.langswitch button[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--cyan);
+}
+
+/* ---------- hero ---------- */
+.card-hero {
+  text-align: center;
+  padding: 6px 0 4px;
+}
+
+.card-avatar {
+  display: block;
+  width: 152px;
+  height: 152px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  border: 4px solid var(--ink);
+  box-shadow: var(--shadow-lg);
+  background: var(--cyan);
+  object-fit: cover;
+}
+
+.card-eyebrow {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.card-hero h1 {
+  margin: 0 0 14px;
+  font-size: clamp(1.85rem, 8.5vw, 2.35rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+}
+
+.card-intro {
+  margin: 0;
+  font-size: 1.02rem;
+  font-weight: 600;
+}
+
+/* ---------- why ---------- */
+.card-why {
+  margin-top: 20px;
+  background: var(--yellow);
+}
+
+.card-why .lead {
+  margin: 0 0 12px;
+  font-size: 1.22rem;
+  font-weight: 900;
+  line-height: 1.22;
+}
+
+.card-why p:last-child {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ---------- services ---------- */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  padding: 7px 13px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  background: var(--cyan);
+}
+
+.chips li:nth-child(3n + 2) {
+  background: var(--magenta);
+  color: var(--paper);
+}
+
+.chips li:nth-child(3n + 3) {
+  background: var(--yellow);
+}
+
+.chips-more {
+  margin: 12px 0 0;
+  font-weight: 800;
+  font-style: italic;
+}
+
+/* ---------- work ---------- */
+.worklist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.worklist a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 11px 14px;
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  background: var(--cyan);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.worklist .meta {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.worklist .kind {
+  font-size: 0.78rem;
+  font-weight: 700;
+  opacity: 0.72;
+}
+
+.worklist .arrow {
+  margin-left: auto;
+  font-weight: 900;
+  font-size: 1.15rem;
+}
+
+/* ---------- game ---------- */
+.card-game {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.card-game h2 {
+  color: var(--cyan);
+}
+
+.card-game p {
+  margin: 0 0 14px;
+  font-weight: 600;
+}
+
+.card-game a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 48px;
+  padding: 0 20px;
+  border: 3px solid var(--cyan);
+  border-radius: 999px;
+  background: var(--magenta);
+  color: #fff;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+/* ---------- mission ---------- */
+.card-mission {
+  background: var(--magenta);
+  color: #fff;
+  text-align: center;
+}
+
+.card-mission p {
+  margin: 0;
+  font-size: 1.12rem;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+/* ---------- contact ---------- */
+.card-contact a {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.card-contact .row {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-bottom: 14px;
+}
+
+.card-contact .row:last-child {
+  margin-bottom: 0;
+}
+
+.card-contact .label {
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+.card-contact .value {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 1.1rem;
+  word-break: break-word;
+}
+
+.card-footer {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 4px 0 8px;
+}
+
+/* ---------- sticky action bar ---------- */
+.actionbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  background: var(--ink);
+  border-top: 3px solid var(--ink);
+  padding: 8px 14px calc(8px + env(safe-area-inset-bottom));
+}
+
+.actionbar-inner {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+.actionbar-hint {
+  margin: 0 0 7px;
+  text-align: center;
+  color: var(--cyan);
+  font-size: 0.82rem;
+  font-weight: 800;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.25fr;
+  gap: 8px;
+}
+
+.actions a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 54px;
+  padding: 6px 4px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 900;
+  font-size: 0.84rem;
+  line-height: 1.1;
+  text-align: center;
+}
+
+.act-call { background: var(--cyan); }
+.act-text { background: var(--yellow); }
+.act-save { background: var(--magenta); color: #fff; }
+
+.actions svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ---------- a11y ---------- */
+.card-body :focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+.actionbar :focus-visible,
+.card-game a:focus-visible {
+  outline-color: #fff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .worklist a,
+  .actions a,
+  .card-game a {
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+  }
+
+  .worklist a:active,
+  .actions a:active,
+  .card-game a:active {
+    transform: translateY(2px);
+  }
+}

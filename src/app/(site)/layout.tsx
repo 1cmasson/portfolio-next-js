@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Fira_Code } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 
 import { SkipLink, Header, Footer } from "@/components/layout";
 import { StarfieldCanvas, NyanCatFlyby, MotionProvider } from "@/components/animation";
