@@ -27,8 +27,11 @@ export const metadata: Metadata = {
   // clobbered a client-set document.title on first load, so ContactCard renders
   // the <title> itself (React 19 hoists it into <head>) and it tracks the
   // selected language. Declaring one here too would emit a second <title>.
+  // Spanish, to match DEFAULT_LOCALE. Metadata is emitted once at build time —
+  // crawlers and link unfurlers never run the client-side language switch, so
+  // this has to track the locale the page actually opens in.
   description:
-    "Carlos Masson — engineer at The Home Depot, based in Miami Lakes. Custom 3D prints, 3D modeling, AI animation, AI voice calls and highly performant websites for local businesses in Hialeah.",
+    "Carlos Masson — ingeniero en The Home Depot, radicado en Miami Lakes. Impresiones 3D personalizadas, modelado 3D, animación con IA, llamadas con voz de IA y sitios web ultrarrápidos para negocios locales en Hialeah.",
   alternates: { canonical: "/hi" },
   icons: {
     icon: "/hi/favicon.png",
@@ -37,16 +40,18 @@ export const metadata: Metadata = {
   openGraph: {
     type: "profile",
     url: "/hi",
-    title: "Carlos Masson — Websites, 3D Prints & AI",
+    locale: "es_US",
+    alternateLocale: ["en_US"],
+    title: "Carlos Masson — Sitios web, impresiones 3D e IA",
     description:
-      "I build highly performant websites, custom 3D prints and AI systems for local businesses in Hialeah. Call or text 786-909-3661.",
+      "Creo sitios web ultrarrápidos, impresiones 3D personalizadas y sistemas de IA para negocios locales en Hialeah. Llama o escribe al 786-909-3661.",
     images: [{ url: "/hi/og.jpg", width: 1200, height: 630 }],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Carlos Masson — Websites, 3D Prints & AI",
+    title: "Carlos Masson — Sitios web, impresiones 3D e IA",
     description:
-      "Custom 3D prints, AI systems and fast websites for Hialeah businesses.",
+      "Impresiones 3D personalizadas, sistemas de IA y sitios web rápidos para negocios de Hialeah.",
     images: ["/hi/og.jpg"],
   },
 };
@@ -62,8 +67,10 @@ export const viewport: Viewport = {
 export default function CardRootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  // Matches DEFAULT_LOCALE and the prerendered copy. /hi rewrites this on the
+  // client when the visitor switches; /qr marks its own subtree as English.
   return (
-    <html lang="en">
+    <html lang="es">
       <body className="card-body">{children}</body>
     </html>
   );

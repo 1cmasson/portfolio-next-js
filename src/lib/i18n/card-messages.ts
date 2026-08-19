@@ -1,20 +1,31 @@
 /**
  * Message catalogue for the /hi contact card.
  *
- * Hand-rolled and key-based rather than i18next: a ~40 KB runtime on the one
- * page that sells "highly performant websites" would undercut the pitch. The
- * shape is the standard one, so swapping in a library later is mechanical.
+ * Plain data, deliberately: this module holds only the strings and their types,
+ * so it stays importable from server components (metadata, the vCard) without
+ * dragging the i18next runtime along. The instance that consumes it lives in
+ * ./card-i18n.
  *
  * `MessageKey` is derived from the English catalogue, so every other locale is
  * checked at compile time — a missing or misspelled Spanish key fails the build
- * instead of silently rendering English in production.
+ * instead of silently rendering English in production. i18next is configured
+ * with `keySeparator: false`, so the dots below are literal characters in a flat
+ * key, not a nested lookup path.
  */
+
+/** Single namespace: one page, one catalogue, no lazy-loaded bundles. */
+export const CARD_NS = "card";
 
 export const CARD_LOCALES = ["en", "es"] as const;
 
 export type CardLocale = (typeof CARD_LOCALES)[number];
 
-export const DEFAULT_LOCALE: CardLocale = "en";
+/**
+ * Spanish. The card is handed to business owners in Hialeah, so Spanish is the
+ * greeting, not the fallback — an English phone still lands here and uses the
+ * EN toggle. This is also the locale the page is statically prerendered in.
+ */
+export const DEFAULT_LOCALE: CardLocale = "es";
 
 const en = {
   "meta.title": "Carlos Masson — Websites, 3D Prints & AI in Hialeah",
@@ -60,7 +71,10 @@ const en = {
 
 export type MessageKey = keyof typeof en;
 
-const es: Record<MessageKey, string> = {
+/** Every locale must carry the full English key set. */
+export type CardMessages = Record<MessageKey, string>;
+
+const es: CardMessages = {
   "meta.title": "Carlos Masson — Sitios web, impresiones 3D e IA en Hialeah",
   "lang.aria": "Idioma",
   "hero.eyebrow": "Hialeah · Miami Lakes, FL",
@@ -103,10 +117,14 @@ const es: Record<MessageKey, string> = {
   "footer.note": "Hecho en Miami Lakes por Carlos Masson.",
 };
 
-export const CARD_MESSAGES: Record<CardLocale, Record<MessageKey, string>> = {
-  en,
-  es,
-};
+/**
+ * i18next `resources`, namespaced under CARD_NS. `en` keeps its literal-string
+ * type so `t()` autocompletes and rejects unknown keys (see ./i18next.d.ts).
+ */
+export const CARD_RESOURCES = {
+  en: { [CARD_NS]: en },
+  es: { [CARD_NS]: es },
+} as const satisfies Record<CardLocale, Record<typeof CARD_NS, CardMessages>>;
 
 export function isCardLocale(value: unknown): value is CardLocale {
   return (
@@ -115,6 +133,13 @@ export function isCardLocale(value: unknown): value is CardLocale {
   );
 }
 
-export function translate(key: MessageKey, locale: CardLocale): string {
-  return CARD_MESSAGES[locale][key] ?? CARD_MESSAGES[DEFAULT_LOCALE][key];
+/**
+ * "es-419", "ES", "es-US" all mean Spanish here. Narrows a BCP 47 tag to a
+ * supported locale, or undefined if we do not have a catalogue for it.
+ */
+export function normalizeCardLocale(value: unknown): CardLocale | undefined {
+  const base = String(value ?? "")
+    .toLowerCase()
+    .split("-")[0];
+  return isCardLocale(base) ? base : undefined;
 }

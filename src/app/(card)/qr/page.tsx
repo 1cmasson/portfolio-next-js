@@ -27,8 +27,12 @@ export const metadata: Metadata = {
 };
 
 export default function QrPage() {
+  // The (card) root layout now declares <html lang="es"> for /hi. This page's
+  // copy is English and is written for me, not for the people the card is
+  // handed to, so it marks its own subtree — `lang` on any element overrides
+  // the ancestor for screen readers and translation tools.
   return (
-    <main className="qr-shell">
+    <main className="qr-shell" lang="en">
       <a className="card-mark qr-mark" href="/hi">
         CM
       </a>
